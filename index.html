@@ -66,7 +66,7 @@ button.addEventListener("click",async()=>{
   const card=document.createElement("div");card.className="stop";
   const num=document.createElement("div");num.className="num";num.textContent="STOP "+String(i+1).padStart(2,"0");
   const name=document.createElement("div");name.className="name";name.textContent=pick(destinations);
-  card.append(num,name);routesEl.append(card);await wait(260);
+  card.append(num,name);routesEl.append(card);await wait(3000);
  }
  statusEl.textContent="抽選完了。よい運行を！";button.disabled=false;
 });
