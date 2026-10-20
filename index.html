@@ -60,14 +60,32 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 button.addEventListener("click",async()=>{
  button.disabled=true;statusEl.textContent="経由数を抽選中…";routesEl.replaceChildren();countEl.className="value";
- for(let i=0;i<10;i++){countEl.textContent=pick(counts)+" 駅";await wait(55)}
- const n=pick(counts);countEl.textContent=n+" 駅";statusEl.textContent=`行き先を ${n} 回抽選中…`;
- for(let i=0;i<n;i++){
+ const start1=performance.now();
+ while(performance.now()-start1<2500){
+  countEl.textContent=pick(counts)+" 駅";
+  await wait(Math.min(70,Math.max(1,2500-(performance.now()-start1))));
+ }
+ const n=pick(counts);countEl.textContent=n+" 駅";
+ statusEl.textContent=`行き先を ${n} 回抽選中…`;
+ const selected=Array.from({length:n},()=>pick(destinations));
+ const start2=performance.now();
+ while(performance.now()-start2<2500){
+  routesEl.replaceChildren();
+  selected.forEach((_,i)=>{
+   const card=document.createElement("div");card.className="stop";
+   const num=document.createElement("div");num.className="num";num.textContent="STOP "+String(i+1).padStart(2,"0");
+   const name=document.createElement("div");name.className="name";name.textContent=pick(destinations);
+   card.append(num,name);routesEl.append(card);
+  });
+  await wait(Math.min(70,Math.max(1,2500-(performance.now()-start2))));
+ }
+ routesEl.replaceChildren();
+ selected.forEach((destination,i)=>{
   const card=document.createElement("div");card.className="stop";
   const num=document.createElement("div");num.className="num";num.textContent="STOP "+String(i+1).padStart(2,"0");
-  const name=document.createElement("div");name.className="name";name.textContent=pick(destinations);
-  card.append(num,name);routesEl.append(card);await wait(3000);
- }
+  const name=document.createElement("div");name.className="name";name.textContent=destination;
+  card.append(num,name);routesEl.append(card);
+ });
  statusEl.textContent="抽選完了。よい運行を！";button.disabled=false;
 });
 </script>
